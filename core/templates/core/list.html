@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Les Pre-Demande</title>
+</head>
+<body>
+    <h2>Les Pre-Demandes d'achat</h2>
+    <ul>
+        {% for predemande in predemandes %}
+            <li>{{ predemande.nom_du_produit }} - {{ predemande.service }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
