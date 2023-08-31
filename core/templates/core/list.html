@@ -2,13 +2,40 @@
 <html>
 <head>
     <title>Les Pre-Demande</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</head>
 </head>
 <body>
+  <div class="m-5">
     <h2>Les Pre-Demandes d'achat</h2>
-    <ul>
-        {% for predemande in predemandes %}
-            <li>{{ predemande.designation }} - {{ predemande.qtt }}</li>
-        {% endfor %}
-    </ul>
+   <div> 
+    
+    <div class="m-5">
+        <div class="accordion" id="accordionExample">
+            {% for predemande in predemandes %}
+            <div class="accordion-item">
+              <h2 class="accordion-header" >
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Pré demande numero {{ forloop.counter }}
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"> Désignation : {{ predemande.designation }} </li>
+                        <li class="list-group-item"> Qunatité : {{ predemande.qtt }} </li>
+                        <li class="list-group-item"> Compte de Destination : {{ predemande.get_destinationCompte_display }} </li>
+                        <li class="list-group-item"> Nature de l'Achat : {{ predemande.get_natureAchat_display }} </li>
+                        <li class="list-group-item"> Affectation de l'Achat : {{ predemande.get_affectationAchat_display }} </li>
+                      </ul>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
 </body>
 </html>

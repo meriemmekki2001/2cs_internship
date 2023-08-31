@@ -5,6 +5,7 @@ from .forms import PreDemandeForm
 def create_predemande(request):
     if request.method == 'POST':
         form = PreDemandeForm(request.POST)
+        print(form)
         if form.is_valid():
             form.save()
             return redirect('core:pre_demande_list')  
