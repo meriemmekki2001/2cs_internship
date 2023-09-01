@@ -31,13 +31,39 @@
                                   <td>{{ predemande.get_natureAchat_display }}</td>
                                   <td>{{ predemande.get_affectationAchat_display }}</td>
                                   <td>{{ predemande.get_affectationAchat_display }}</td>
-                                  <td>  <a class="btn btn-warning me-1" href="{% url 'core:edit' predemande.id %}">
+                                  <td>  <a class="btn btn-outline-primary" href="{% url 'core:edit' predemande.id %}">
                                     <i class="fa-solid fa-pen-to-square fa-lg"></i>
                                   </a>
             
-                                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#core:delete{{predemande.id}}">
+                                  <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#core:delete{{predemande.id}}">
                                     <i class="fa-solid fa-trash-can fa-lg"></i>
                                   </button>
+                                  
+                      <!-- Modal - Supprimer pré demande -->
+                      <div class="modal" id="core:delete{{predemande.id}}" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">
+                                 {{ predemande.designation }} 
+                              </h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <p> Êtes vous sûr de vouloir annuler cette pré demande ?</p>
+                            </div>
+                            <div class="modal-footer">
+                              <form action="{% url 'core:delete' predemande.id %}" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-primary" value="Oui">
+                              </form>
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                                 </td>
                                 </tr>
                                 {% endfor %}
