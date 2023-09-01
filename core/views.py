@@ -14,7 +14,7 @@ def create_predemande(request):
         form = PreDemandeForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('core:pre_demande_list')  
+            return redirect('core:index')  
     else:
         form = PreDemandeForm()
     return render(request, 'core/create.html', {'form': form,'success':True})
