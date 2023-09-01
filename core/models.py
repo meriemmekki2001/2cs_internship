@@ -14,7 +14,7 @@ class PreDemande(models.Model):
         Autre = '004', _('Autre')
 
     class MiseDispo(models.TextChoices):
-        Cosommable_interne = '001', _('Cosommable interne')
+        Cosommable_interne = '001', _('Consommable interne')
         Revente_client = '002', _('Revente client')
         Stock = '003', _('Stock')
         Autre = '004', _('Autre')
@@ -37,6 +37,7 @@ class PreDemande(models.Model):
         choices=NatureAchat.choices,
         default=NatureAchat.Investissement)
     miseDiso = models.CharField(
+        _("miseDispo"),
         max_length=18,
         choices=MiseDispo.choices,
         default=MiseDispo.Cosommable_interne)

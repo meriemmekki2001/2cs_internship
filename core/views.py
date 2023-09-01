@@ -1,18 +1,48 @@
 from django.shortcuts import render, redirect
 from .models import PreDemande
 from .forms import PreDemandeForm
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+def index(request):
+    predemandes = PreDemande.objects.all()
+    return render(request, 'core/index.html', {'predemandes': predemandes})
+
 
 def create_predemande(request):
     if request.method == 'POST':
         form = PreDemandeForm(request.POST)
-        print(form)
         if form.is_valid():
             form.save()
             return redirect('core:pre_demande_list')  
     else:
         form = PreDemandeForm()
-    return render(request, 'core/create.html', {'form': form})
+    return render(request, 'core/create.html', {'form': form,'success':True})
 
 def pre_demande_list(request):
     predemandes = PreDemande.objects.all()
     return render(request, 'core/list.html', {'predemandes': predemandes})
+
+def edit(request, id):
+  if request.method == 'POST':
+    pre_demande = PreDemande.objects.get(pk=id)
+    form = PreDemandeForm(request.POST, instance=pre_demande)
+    if form.is_valid():
+      form.save()
+      return render(request, 'core/edit.html', {
+        'form': form,
+        'success': True
+      })
+  else:
+    student = PreDemande.objects.get(pk=id)
+    form = PreDemandeForm(instance=student)
+  return render(request, 'core/edit.html', {
+    'form': form
+  })
+
+
+def delete(request, id):
+  if request.method == 'POST':
+    pre_demande = PreDemande.objects.get(pk=id)
+    pre_demande.delete()
+  return HttpResponseRedirect(reverse('core:index'))
