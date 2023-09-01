@@ -19,9 +19,6 @@ def create_predemande(request):
         form = PreDemandeForm()
     return render(request, 'core/create.html', {'form': form,'success':True})
 
-def pre_demande_list(request):
-    predemandes = PreDemande.objects.all()
-    return render(request, 'core/list.html', {'predemandes': predemandes})
 
 def edit(request, id):
   if request.method == 'POST':
