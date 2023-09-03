@@ -26,4 +26,31 @@
       </div>
     </div>
   {% endif %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const natureAchat = document.getElementById("id_natureAchat");
+      const na_autre = document.getElementById("id_na_autre");
+      const miseDiso = document.getElementById("id_miseDiso");
+      const md_autre = document.getElementById("id_md_autre");
+  
+      natureAchat.addEventListener("change", function() {
+            if (natureAchat.value === "004") {
+              na_autre.style.display = "block";
+            } else {
+              na_autre.style.display = "none";
+            }
+        });
+        natureAchat.dispatchEvent(new Event("change"));
+  
+        miseDiso.addEventListener("change", function() {
+          if (miseDiso.value === "004") {
+            md_autre.style.display = "block";
+          } else {
+            md_autre.style.display = "none";
+          }
+      });
+      miseDiso.dispatchEvent(new Event("change"));
+    });
+  </script>
+
 {% endblock %}
