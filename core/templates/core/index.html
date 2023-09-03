@@ -28,8 +28,16 @@
                                   <td>{{ predemande.designation }}</td>
                                   <td>{{ predemande.qtt }}</td>
                                   <td>{{ predemande.get_destinationCompte_display }}</td>
+                                  {% if predemande.natureAchat == '004' %}
+                                  <td>{{ predemande.na_autre }}</td>
+                                  {% else %}
                                   <td>{{ predemande.get_natureAchat_display }}</td>
+                                  {% endif %}
+                                  {% if predemande.miseDiso == '004' %}
+                                  <td>{{ predemande.md_autre }}</td>
+                                  {% else %}
                                   <td>{{ predemande.get_miseDiso_display }}</td>
+                                  {% endif %}
                                   <td>{{ predemande.get_affectationAchat_display }}</td>
                                   <td>  <a class="btn btn-outline-primary" href="{% url 'core:edit' predemande.id %}">
                                     <i class="fa-solid fa-pen-to-square fa-lg"></i>
