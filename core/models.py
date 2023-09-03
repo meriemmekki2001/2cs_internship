@@ -36,21 +36,19 @@ class PreDemande(models.Model):
         max_length=14,
         choices=NatureAchat.choices,
         default=NatureAchat.Investissement)
-    na_autre = models.CharField(_(""),max_length=255,null=True,blank=True)
+    na_autre = models.CharField(max_length=255,null=True,blank=True)
     miseDiso = models.CharField(
         _("mise Dispo"),
         max_length=18,
         choices=MiseDispo.choices,
         default=MiseDispo.Cosommable_interne)
-    md_autre = models.CharField(_(""),max_length=255,null=True,blank=True)
+    md_autre = models.CharField(max_length=255,null=True,blank=True)
     affectationAchat = models.CharField(
         _("Affectation de l'Achat"),
         max_length=30,
         choices=AffectationAchat.choices,
         default=AffectationAchat.Famille_accés_internet)
     
-    def __str__(self):
-        return self.designation
 
     
 

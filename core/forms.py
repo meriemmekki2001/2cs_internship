@@ -1,6 +1,7 @@
 from .models import PreDemande
 from django.forms import ModelForm, Textarea,Select,TextInput
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
     
 
@@ -21,5 +22,8 @@ class PreDemandeForm(ModelForm):
            
             
         }
-        
+        labels = {
+            "na_autre": _(""),
+            "md_autre": _(""),
+        }
 
