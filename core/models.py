@@ -48,6 +48,8 @@ class PreDemande(models.Model):
         max_length=30,
         choices=AffectationAchat.choices,
         default=AffectationAchat.Famille_accés_internet)
+    activee = models.BooleanField(default=True)
+    validee = models.BooleanField(default=False)
     
 
     

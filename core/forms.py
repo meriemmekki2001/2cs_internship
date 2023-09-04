@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 class PreDemandeForm(ModelForm):
     class Meta:
         model = PreDemande
-        fields = "__all__"
+        fields = ["designation","qtt","destinationCompte","natureAchat","na_autre","miseDiso","md_autre","affectationAchat"]
         widgets = {
             "designation": Textarea(attrs={"class":"form-select","rows":"2" }),
             "qtt": TextInput(attrs={"type":"number", "class":"form-control", "name":"integerInput" ,"placeholder":"Ce champs doit être un entier" }),
