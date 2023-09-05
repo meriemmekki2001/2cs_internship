@@ -1,5 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from django.conf import settings
+
 
 
 class PreDemande(models.Model):
@@ -48,8 +51,13 @@ class PreDemande(models.Model):
         max_length=30,
         choices=AffectationAchat.choices,
         default=AffectationAchat.Famille_accés_internet)
-    activee = models.BooleanField(default=True)
-    validee = models.BooleanField(default=False)
+    activee = models.BooleanField(_("activé"),default=True)
+    validee = models.BooleanField(_("validé"),default=False)
+    creee_le = models.DateTimeField(_("date de soumition"), default=timezone.now)
+    modifee_le = models.DateTimeField(_("dernière modification"), default=timezone.now)
+    cree_par = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.PROTECT,null=True)
+
+
     
 
     
