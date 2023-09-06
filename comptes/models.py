@@ -7,9 +7,10 @@ from django.conf import settings
 
 class Structure(models.Model):
     nom = models.CharField(_("nom du département"),max_length=150,blank=False,null=False)
-    responsable = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.PROTECT,blank=True,null=True)
     def __str__(self):
         return self.nom
+    
+    
 
 class UserManager(BaseUserManager):
     def _create_user(self,email, password, **extra_fields):
@@ -48,16 +49,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("compte activé"),
         default=True,)
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-    departement = models.ForeignKey(Structure,on_delete=models.PROTECT,blank=True,null=True)
+    departement = models.ForeignKey(Structure,on_delete=models.PROTECT,null=True,blank=True,related_name='personnel')
+    responsable = models.BooleanField(default=False)
     groups = models.ManyToManyField(
         Group,
         verbose_name=_('groups'),
         blank=True,
         related_name='comptes_users',  # Add a related_name to avoid clashes
-        help_text=_(
-            'The groups this user belongs to. A user will get all permissions '
-            'granted to each of their groups.'
-        ),
+        # help_text=_(
+        #     'The groups this user belongs to. A user will get all permissions '
+        #     'granted to each of their groups.'
+        # ),
     )
 
     user_permissions = models.ManyToManyField(

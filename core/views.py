@@ -6,11 +6,19 @@ from django.urls import reverse
 from comptes.models import User
 
 def index(request):
-    user_id = request.user.id
-    user = User.objects.get(pk=user_id)
-    predemandes = PreDemande.objects.all()
     if request.user.is_authenticated:
+       user_id = request.user.id
+       user = User.objects.get(pk=user_id)
+       if user.departement.nom == 'Moyens Généraux':
+          predemandes = PreDemande.objects.filter(validee=True,destinationCompte='MGX')
+       elif user.departement.nom == 'Interconnexions':
+          predemandes = PreDemande.objects.filter(validee=True,destinationCompte='INT')
+       elif user.responsable:
+          predemandes = PreDemande.objects.filter(departement=user.departement)    
+       else:
+          predemandes = PreDemande.objects.filter(cree_par=user)
        return render(request, 'core/index.html', {'predemandes': predemandes})
+    
     else:
        return render(request, 'comptes/dashboard.html')
        
