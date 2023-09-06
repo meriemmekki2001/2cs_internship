@@ -19,7 +19,7 @@ def Logout(request):
 
 class LoginView(FormView):
     form_class = forms.LoginForm
-    success_url = reverse_lazy('comptes:dashboard')
+    success_url = reverse_lazy('core:index')
     template_name = 'comptes/login.html'
 
     def form_valid(self, form):

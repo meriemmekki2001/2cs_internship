@@ -51,10 +51,7 @@
                       <form method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
-                
-                        {% comment %} <button type="submit">Login</button> {% endcomment %}
                         <div class="d-flex align-items-center justify-content-center pb-4">
-                            {% comment %} <button type="submit" class="btn btn-outline-danger">LogIn</button> {% endcomment %}
                             <button type="submit" class="btn btn-outline-primary" >LogIn</button>
                           </div>
                     </form>

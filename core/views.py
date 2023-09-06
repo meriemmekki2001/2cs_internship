@@ -4,9 +4,14 @@ from .forms import PreDemandeForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
+
 def index(request):
     predemandes = PreDemande.objects.all()
-    return render(request, 'core/index.html', {'predemandes': predemandes})
+    if request.user.is_authenticated:
+       return render(request, 'core/index.html', {'predemandes': predemandes})
+    else:
+       return render(request, 'comptes/dashboard.html')
+       
 
 
 def create_predemande(request):
