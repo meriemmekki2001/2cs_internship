@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
+from comptes.models import Structure
 
 
 
@@ -56,6 +57,7 @@ class PreDemande(models.Model):
     creee_le = models.DateTimeField(_("date de soumition"), default=timezone.now)
     modifee_le = models.DateTimeField(_("dernière modification"), default=timezone.now)
     cree_par = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.PROTECT,null=True)
+    departement = models.ForeignKey(Structure,on_delete=models.PROTECT,null=True)
 
 
     

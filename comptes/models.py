@@ -38,8 +38,8 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_("Nom"), max_length=150, blank=False,null=False)
     last_name = models.CharField(_("Prénom"), max_length=150, blank=False,null=False)
-    email = models.EmailField(_("email address"), blank=False,null=False,unique=True)
-    matricule = models.CharField(_("matricule"), max_length=20, blank=False,null=False)
+    email = models.EmailField(_("Adresse e-mail"), blank=False,null=False,unique=True)
+    matricule = models.CharField(_("Matricule"), max_length=20, blank=False,null=False)
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,

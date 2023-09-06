@@ -3,9 +3,11 @@ from .models import PreDemande
 from .forms import PreDemandeForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-
+from comptes.models import User
 
 def index(request):
+    user_id = request.user.id
+    user = User.objects.get(pk=user_id)
     predemandes = PreDemande.objects.all()
     if request.user.is_authenticated:
        return render(request, 'core/index.html', {'predemandes': predemandes})
@@ -18,7 +20,12 @@ def create_predemande(request):
     if request.method == 'POST':
         form = PreDemandeForm(request.POST)
         if form.is_valid():
-            form.save()
+            pre_demande = form.save(commit=False)
+            user_id = request.user.id
+            user = User.objects.get(pk=user_id)
+            pre_demande.cree_par = user
+            pre_demande.departement = user.departement   
+            pre_demande.save()
             return redirect('core:index')  
     else:
         form = PreDemandeForm()
