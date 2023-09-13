@@ -1,0 +1,28 @@
+{% extends 'core/home.html' %}
+
+{% block body %}
+<div class="m-5"> 
+    <div class="row justify-content-center">
+        <div class="col-6">
+          <div class="card bg-light mb-3">
+            <div class="card-header">
+              <i class="fa-solid fa-address-card fa-lg"></i> Ajouter une catégorie
+            </div>
+            <div class="card-body">
+              <form action="{% url 'core:create_categorie' %}" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary"> Ajouter</button>
+                <a href="{% url 'core:index' %}" class="btn btn-secondary">Annuler</a>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+ </div>
+
+
+
+{%endblock%}
+
+

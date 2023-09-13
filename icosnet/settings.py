@@ -56,6 +56,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'icosnet.urls'
 
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -123,7 +129,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 AUTH_USER_MODEL = "comptes.User"
-LOGIN_REDIRECT_URL = 'admin/'
+PASSWORD_CHANGE_REDIRECT_URL = 'comptes:password_changed' 
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -131,6 +139,13 @@ LOGIN_REDIRECT_URL = 'admin/'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = "me.mekki@esi-sba.dz"
+EMAIL_HOST_PASSWORD = "ztqdizeludtbfaek"
+EMAIL_PORT = 587
 
 
 JAZZMIN_SETTINGS = {

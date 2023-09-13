@@ -12,9 +12,6 @@
             /* fallback for old browsers */
             background: #00A3FF ;
             
-            {% comment %} /* Chrome 10-25, Safari 5.1-6 */
-            background: -webkit-linear-gradient(to right, #00A3FF, #00A3FF , #00A3FF , #00A3FF ); {% endcomment %}
-            
             /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
             background: linear-gradient(to right, #00A3FF , #00A3FF ,#0085FF , #003DD5 );
             }
@@ -52,7 +49,7 @@
                         {% csrf_token %}
                         {{ form.as_p }}
                         <div class="d-flex align-items-center justify-content-center pb-4">
-                            <button type="submit" class="btn btn-outline-primary" >LogIn</button>
+                            <button type="submit" class="btn btn-outline-primary" >Se connecter</button>
                           </div>
                     </form>
       

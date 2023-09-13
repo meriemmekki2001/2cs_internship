@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
+from django.core.mail import send_mail
 
 class Structure(models.Model):
     nom = models.CharField(_("nom du département"),max_length=150,blank=False,null=False)
@@ -37,8 +38,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(_("Nom"), max_length=150, blank=False,null=False)
-    last_name = models.CharField(_("Prénom"), max_length=150, blank=False,null=False)
+    first_name = models.CharField(_("Prénom"), max_length=150, blank=False,null=False)
+    last_name = models.CharField(_("Nom"), max_length=150, blank=False,null=False)
     email = models.EmailField(_("Adresse e-mail"), blank=False,null=False,unique=True)
     matricule = models.CharField(_("Matricule"), max_length=20, blank=False,null=False)
     is_staff = models.BooleanField(
@@ -49,13 +50,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("compte activé"),
         default=True,)
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-    departement = models.ForeignKey(Structure,on_delete=models.PROTECT,null=True,blank=True,related_name='personnel')
+    departement = models.ForeignKey(Structure,on_delete=models.PROTECT,null=False,blank=False,related_name='personnel')
     responsable = models.BooleanField(default=False)
+    profile_picture = models.ImageField(upload_to='profile_pics', blank=True, null=True)
     groups = models.ManyToManyField(
         Group,
         verbose_name=_('groups'),
         blank=True,
-        related_name='comptes_users',  # Add a related_name to avoid clashes
+        related_name='comptes_users', 
         # help_text=_(
         #     'The groups this user belongs to. A user will get all permissions '
         #     'granted to each of their groups.'
@@ -91,10 +93,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name
+    
+    def __str__(self):
+        return  self.first_name.capitalize() +' '+self.last_name.upper()
 
-    # def email_user(self, subject, message, from_email=None, **kwargs):
-    #     """Send an email to this user."""
-    #     send_mail(subject, message, from_email, [self.email], **kwargs)
+    def email_user(self, subject, message, from_email=None, **kwargs):
+        """Send an email to this user."""
+        send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
 

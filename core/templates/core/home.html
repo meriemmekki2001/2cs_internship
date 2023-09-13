@@ -1,0 +1,150 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Accueuil</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{% static 'core/home.css' %}">
+  </head>
+  <body>
+		
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar">
+				<div class="p-4 pt-5">
+		  		<a href="#" class="img logo rounded-circle mb-5" style="background-image: url({{ user.profile_picture.url }});"></a>
+                <h3> {{ user.first_name.capitalize }} {{ user.last_name.upper }} <h3>
+	        <ul class="list-unstyled components mb-5">
+	          <li>
+	              <a href="{% url 'core:create_predemande' %}">Soumettre PDA</a>
+	          </li>
+	          <li>
+              <a href="{% url 'core:index' %}">Voir PDAs</a>
+	          </li>
+            {% if user.departement.nom == 'Moyens Généraux' %}
+            <li>
+              <a href="{% url 'core:create_fournisseur' %}">Ajout fournisseur</a>
+	          </li>
+            <li>
+              <a href="{% url 'core:list_fournisseurs' %}">Voir fournisseur</a>
+	          </li>
+            <li>
+              <a href="{% url 'core:create_categorie' %}">Ajout catégorie</a>
+	          </li>
+            <li>
+              <a href="{% url 'core:list_categories' %}">Voir catégories</a>
+	          </li>
+            {% endif %}
+	          <li>
+              <a href="{% url 'custom_logout' %}">Deconnexion</a>
+	          </li>
+	        </ul>
+
+	      </div>
+    	</nav>
+
+        <!-- Page Content  -->
+      <div id="content" class="p-4 p-md-5">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+
+            <button type="button" id="sidebarCollapse" class="btn btn-primary">
+              <i class="fa fa-bars"></i>
+              <span class="sr-only">Toggle Menu</span>
+            </button>
+            <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </button>
+          </div>
+        </nav>
+        {%block body%}
+
+        <div class="container-fluid"> 
+          <div class="m-4"> 
+              <div class="row"> 
+                  <div class="col-12"> 
+                      <div class="card border-secondary mb-3" style="ms-4 mb-4">
+                          <div class="card-header"> <i class="fa-solid fa-list"></i> Les Pré demandes d'achat </div>
+                          <div class="card-body">
+                              <div class="table-responsive"> 
+                                  <table class="table table-hover">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">Id</th>
+                                          <th scope="col">Crée par</th>
+                                          <th scope="col">Structure</th>
+                                          <th scope="col"> Date de soumission </th>
+                                          <th scope="col">Statut</th>
+                                          <th scope="col">Réponse finale</th>
+                                          <th scope="col">Actions</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                      {% for predemande in predemandes %}
+                                        <tr>
+                                          <td>{{ predemande.id }}</td>
+                                          <td>{{ predemande.cree_par }}</td>
+                                          <td>{{ predemande.departement }}</td>
+                                          <td>{{ predemande.creee_le }}</td>
+                                          <td>{{ predemande.get_statut_display }}</td>
+                                          <td>{{ predemande.get_reponse_finale_display }}</td>
+                                        {% if user.responsable and predemande.statut == '001' %}
+                                         <td> 
+                                          <form method="post" action="{% url 'core:validation_ds' predemande.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-success" data-bs-dismiss="modal">Valider</button>
+                                        </form>  
+                                        <form method="post" action="{% url 'core:rejet_ds' predemande.id %}">
+                                          {% csrf_token %}
+                                          <button type="submit" class="btn btn-outline-danger" data-bs-dismiss="modal">Rejeter</button>
+                                      </form>  
+                                         </td>
+                                        {% endif %}
+                                        {% if user.departement.nom == predemande.get_destinationCompte_display and predemande.statut == '003' %}
+                                        <td> 
+                                          <form method="post" action="{% url 'core:validation_sa' predemande.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-success" data-bs-dismiss="modal">Valider</button>
+                                        </form>  
+                                        <form method="post" action="{% url 'core:rejet_sa' predemande.id %}">
+                                          {% csrf_token %}
+                                          <button type="submit" class="btn btn-outline-danger" data-bs-dismiss="modal">Rejeter</button>
+                                      </form>  
+                                         </td>
+                                        {% endif %}
+
+                                        </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                    </table>
+        
+                              </div>
+                          </div>
+                        </div>
+        
+                  </div>
+                 </div>
+        
+          </div>
+        </div>
+      
+        {%endblock%}
+       
+      </div>
+         
+		</div>
+
+
+ 
+
+    <script src="{% static 'core/jquery.min.js' %}"></script>
+    <script src="{% static 'core/popper.js' %}"></script>
+    <script src="{% static 'core/bootstrap.min.js' %}"></script>
+    <script src="{% static 'core/main.js' %}"></script>
+  </body>
+</html>

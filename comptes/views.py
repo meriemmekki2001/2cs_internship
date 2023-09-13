@@ -8,13 +8,13 @@ from django.contrib import messages
 
 
 
-def Dashboard(request):
-    return render(request, 'comptes/dashboard.html')
+def AccessDinied(request):
+    return render(request, 'comptes/access_denied.html')
 
 
 def Logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse_lazy('comptes:dashboard'))
+    return HttpResponseRedirect(reverse_lazy('custom_login'))
 
 
 class LoginView(FormView):
@@ -32,4 +32,4 @@ class LoginView(FormView):
         else:
             messages.add_message(self.request, messages.INFO, 'Wrong credentials\
                                 please try again')
-            return HttpResponseRedirect(reverse_lazy('comptes:login'))
+            return HttpResponseRedirect(reverse_lazy('custom_login'))

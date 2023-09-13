@@ -1,13 +1,14 @@
-from django.urls import path
+from django.urls import path,include
 import django.contrib.auth.urls
 from . import views
+from django.contrib.auth import views as auth_views
 
 
-app_name = "comptes"
+# app_name = "comptes"
 urlpatterns = [
-#     path('signup/', views.SignupView.as_view(), name='signup'),
-    path('', views.Dashboard, name='dashboard'),
-    path('logout/', views.Logout, name='logout'),
-    path('login/', views.LoginView.as_view(), name='login'),
+    path('', views.AccessDinied, name='access_denied'),
+    path('deconnexion/', views.Logout, name='custom_logout'),
+    path('connexion/', views.LoginView.as_view(), name='custom_login'),
+    path('comptes/', include('django.contrib.auth.urls')),
   
 ]

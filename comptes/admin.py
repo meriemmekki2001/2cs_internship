@@ -16,7 +16,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["email", "first_name","last_name","matricule"]
+        fields = ["email", "first_name","last_name","departement"]
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -44,19 +44,19 @@ class UserChangeForm(forms.ModelForm):
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
-    list_display = ["email", "first_name","last_name","matricule"]
+    list_display = ["email", "first_name","last_name","departement"]
     list_filter = ["email"]
     fieldsets = [
-        (None, {"fields": ["email", "password"]}),
-        # ("Personal info", {"fields": ["date_of_birth"]}),
-        # ("Permissions", {"fields": ["is_admin"]}),
+        (None, {"fields": ["email", "password","first_name","last_name"]}),
+        ("Personal info", {"fields": ["profile_picture","departement","responsable","is_active"]}),
+        ("Permissions", {"fields": ["is_staff","is_superuser"]}),
     ]
     add_fieldsets = [
         (
             None,
             {
                 "classes": ["wide"],
-                "fields": ["email",  "password1", "password2","departement","responsable"],
+                "fields": ["email", "first_name","last_name", "password1", "password2","departement","responsable"],
             },
         ),
     ]
@@ -67,4 +67,12 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(Structure)
+
+
+@admin.register(Structure)
+class StructureAdmin(admin.ModelAdmin) :
+    list_display = ['id' ,'nom']
+    list_per_page = 10
+    search_fields = ['nom__istartswith']
+    ordering = ['nom']
+    
