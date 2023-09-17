@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-  	<title>Accueuil</title>
+  	<title>Icosnet</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -76,7 +76,9 @@
                                       <thead>
                                         <tr>
                                           <th scope="col">Id</th>
+                                          {% if user.departement.nom == 'Moyens Généraux' or user.departement.nom == 'Interconnexions' or user.responsable %}
                                           <th scope="col">Crée par</th>
+                                          {% endif %}
                                           <th scope="col">Structure</th>
                                           <th scope="col"> Date de soumission </th>
                                           <th scope="col">Statut</th>
@@ -88,7 +90,9 @@
                                       {% for predemande in predemandes %}
                                         <tr>
                                           <td>{{ predemande.id }}</td>
+                                          {% if user.departement.nom == 'Moyens Généraux' or user.departement.nom == 'Interconnexions' or user.responsable %}
                                           <td>{{ predemande.cree_par }}</td>
+                                          {% endif %}
                                           <td>{{ predemande.departement }}</td>
                                           <td>{{ predemande.creee_le }}</td>
                                           <td>{{ predemande.get_statut_display }}</td>
@@ -117,6 +121,14 @@
                                       </form>  
                                          </td>
                                         {% endif %}
+                                      <td>
+                                        {% if predemande.cree_par == user and predemande.statut == '001' %}
+                                        <form method="post" action="{% url 'core:annuler_pda' predemande.id %}">
+                                          {% csrf_token %}
+                                          <button type="submit" class="btn btn-outline-danger" data-bs-dismiss="modal">Annuler</button>
+                                      </form> 
+                                        {% endif %}
+                                    </td>
 
                                         </tr>
                                         {% endfor %}

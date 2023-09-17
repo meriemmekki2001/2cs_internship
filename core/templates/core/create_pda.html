@@ -1,27 +1,79 @@
-{% extends 'core/base.html' %}
-
+{% extends 'core/home.html' %}
+{% load static %}
 {% block body %}
-<div class="m-5"> 
-    <div class="row justify-content-center">
-        <div class="col-6">
-          <div class="card bg-light mb-3">
-            <div class="card-header">
-              <i class="fa-solid fa-address-card fa-lg"></i> Faire une Pré demande  d'achat
-            </div>
-            <div class="card-body">
-              <form action="{% url 'core:create_predemande' %}" method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary"> Soumettre</button>
-                <a href="{% url 'core:index' %}" class="btn btn-secondary">Annuler</a>
-              </form>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap" rel="stylesheet">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'> 
+  <link rel="stylesheet" href="{% static 'core/create_pda.css' %}">
+  
+
+
+  <div class="content__inner">
+    <div class="container overflow-hidden">
+      <div class="multisteps-form">
+        <div class="row">
+          <div class="col-12 col-lg-8 ml-auto mr-auto mb-4">
+            <div class="multisteps-form__progress">
+              <button class="multisteps-form__progress-btn js-active" type="button" title="User Info"></button>
+              <button class="multisteps-form__progress-btn" type="button" title="Message"></button>
             </div>
           </div>
         </div>
-      </div>
- </div>
+        <div class="row">
+          <div class="col-12 col-lg-8 m-auto">
+            <form class="multisteps-form__form" action="{% url 'core:create_predemande' %}"  method="POST">
+              <div class="multisteps-form__panel shadow p-4 rounded bg-white js-active" data-animation="scaleIn">
+                <div class="multisteps-form__content">
+                     {% csrf_token %}
+                     {{ pre_demande_form.as_p }}
+                  <div class="button-row d-flex mt-4">
+                    <button class="btn btn-primary ml-auto js-btn-next" type="button" title="Next">Suivant</button>
+                  </div>
+                </div>
+              </div>
 
- <script>
+              <div class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
+                <div class="multisteps-form__content">
+                  {{ produit_formset.management_form }}
+                  <div id="produit-formset">
+                      {{ produit_formset.forms.0.as_p }}
+                  </div>
+                  <button type="button" class="btn btn-outline-secondary" id="add-produit"> <i class="fa-solid fa-plus"></i></button>
+    
+                
+                  </div>
+                  
+          
+                  <div class="button-row d-flex mt-4">
+                    <button class="btn btn-primary js-btn-prev" type="button" title="Prev">Retour</button>
+                    <button  class="btn btn-outline-primary ml-auto" type="submit" >Soummettre</button>
+                    
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  
+<script src="{% static 'core/create_pda.js' %}"></script>
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+       const addButton = document.getElementById("add-produit");
+       const formsetContainer = document.getElementById("produit-formset");
+       let formCount = 1; 
+
+       addButton.addEventListener("click", function () {
+           const newForm = '{{ produit_formset.empty_form|escapejs }}'.replace(/__prefix__/g, formCount);
+           formCount++;
+           formsetContainer.insertAdjacentHTML("beforeend", newForm);
+       });
+   });
+</script>
+
+<script>
   document.addEventListener("DOMContentLoaded", function() {
     const natureAchat = document.getElementById("id_natureAchat");
     const na_autre = document.getElementById("id_na_autre");
@@ -47,7 +99,6 @@
     miseDiso.dispatchEvent(new Event("change"));
   });
 </script>
-
 {%endblock%}
 
 

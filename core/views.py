@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from .models import PreDemande,Categorie,Fournisseur
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect,HttpResponse,HttpResponseNotAllowed
 from django.urls import reverse
 from comptes.models import User,Structure
 from .forms import ProduitFormSet,PreDemandeForm,CategorieForm, FournisseurForm
@@ -10,8 +10,7 @@ from django.db.models import Q
 #display les pre demandes d'achats
 def index(request):
     if request.user.is_authenticated:
-       user_id = request.user.id
-       user = User.objects.get(pk=user_id)
+       user = User.objects.get(pk=request.user.id)
        if user.departement.nom == 'Moyens Généraux':
            predemandes = PreDemande.objects.filter(Q(statut=PreDemande.Statut.VALIDEE_DS) | Q(statut=PreDemande.Statut.CLOTUREE), destinationCompte='MGX')
        elif user.departement.nom == 'Interconnexions':
@@ -27,13 +26,14 @@ def index(request):
        
 
 
-#supprimer pre demande d'achat
-def delete(request, id):
-  if request.method == 'POST':
-    pre_demande = PreDemande.objects.get(pk=id)
-    pre_demande.delete()
-  return HttpResponseRedirect(reverse('core:index'))
+# supprimer pre demande d'achat
+# def delete(request, id):
+#   if request.method == 'POST':
+#     pre_demande = PreDemande.objects.get(pk=id)
+#     pre_demande.delete()
+#   return HttpResponseRedirect(reverse('core:index'))
 
+# ajouter pre demande d'achat
 def create_pre_demande(request):
     if request.method == 'POST':
         pre_demande_form = PreDemandeForm(request.POST)
@@ -59,7 +59,7 @@ def create_pre_demande(request):
         'produit_formset': produit_formset,
     }
 
-    return render(request, 'core/test.html', context)
+    return render(request, 'core/create_pda.html', context)
 
 #validation d'une pre demande d'achat par un directeur de structure
 def validation_ds(request, id):
@@ -68,7 +68,8 @@ def validation_ds(request, id):
       pre_demande.statut = PreDemande.Statut.VALIDEE_DS
       pre_demande.save()
       return HttpResponseRedirect(reverse('core:index'))
-#rejet    
+    
+# rejet d'une pda par un directeur de structure   
 def rejet_ds(request, id):
     if request.method == 'POST':
       pre_demande = PreDemande.objects.get(pk=id)
@@ -85,7 +86,8 @@ def validation_sa(request, id):
       pre_demande.reponse_finale = PreDemande.Reponse.VALIDEE_SA
       pre_demande.save()
       return HttpResponseRedirect(reverse('core:index'))
-    
+
+# rejet d'une pre demande d'acaht par un serivce d'achat   
 def rejet_sa(request, id):
     if request.method == 'POST':
       pre_demande = PreDemande.objects.get(pk=id)
@@ -141,5 +143,17 @@ def delete_categorie(request, id):
     categorie = Categorie.objects.get(pk=id)
     categorie.delete()
   return HttpResponseRedirect(reverse('core:list_categories'))
+
+
+
+def annuler_pda(request, id):
+    if request.method == 'POST':
+      pre_demande = PreDemande.objects.get(pk=id)
+      if request.user.id == pre_demande.cree_par.id:
+         pre_demande.statut = PreDemande.Statut.ANNULEE
+         pre_demande.save()
+         return HttpResponseRedirect(reverse('core:index'))
+      else:
+         return HttpResponseNotAllowed(['GET'])
 
 
