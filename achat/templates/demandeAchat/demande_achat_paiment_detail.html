@@ -1,0 +1,196 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% load static %}
+
+{% block content %}
+<form action="" method="POST" autocomplete="off">
+  {% csrf_token %}
+  <p class="h1">Demande de Paiment</p>
+  {% if exist == 'True' %}
+  <div class="row">
+    <div class="col-md-8">
+      
+        <a href="{% url 'demande_paiment_download' DP.id %}" class="btn btn-primary btn-block">
+     <i class="fas fa-download"></i> Telecharger
+ </a>
+ <a href="{% url 'DemandePaimentUpdate' DP.id %}" class="btn btn-danger btn-block">
+  <i class="fas fa-delete"></i> Edit
+</a>
+     </div>
+    </div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-md-4">
+            
+        <div id="div_id_Num_fournisseur" class="mb-3">
+                    <label for="id_Num_fournisseur" class="form-label requiredField">
+                        Fournisseur<span class="asteriskField">*</span>
+                    </label>              
+ <input type="text" name="Num_fournisseur" value="{{DP.Num_fournisseur}}" readonly="readonly" class="textinput textInput form-control" required id="id_Num_fournisseur">
+
+</div>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+<div id="div_id_beneficiaire" class="mb-3">
+    <label for="id_beneficiaire" class="form-label requiredField">
+        Beneficiaire<span class="asteriskField">*</span>
+    </label>              
+<input type="text" name="beneficiaire" value="{{DP.beneficiaire}}" readonly="readonly" class="textinput textInput form-control" required id="id_beneficiaire">
+</div>
+</div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+<div id="div_id_bon_commande" class="mb-3">
+  <label for="id_bon_commande" class="form-label requiredField">
+      Bon de Commande<span class="asteriskField">*</span>
+  </label>              
+<input type="text" name="bon_commande" value="{{DP.bon_commande}}" readonly="readonly" class="textinput textInput form-control" required id="id_bon_commande">
+</div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+<div id="div_id_num_facture" class="mb-3">
+  <label for="id_num_facture" class="form-label requiredField">
+      Numero de Facture<span class="asteriskField">*</span>
+  </label>              
+<input type="text" name="num_facture" value="{{DP.num_facture}}" readonly="readonly" class="textinput textInput form-control" required id="id_num_facture">
+</div>
+</div>
+
+
+
+  <div class="row">
+    <div class="col-md-4">{{form.montant_chiffre|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">{{form.montant_lettres|as_crispy_field}}</div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">{{form.devise|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">{{form.mode_paiment|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">{{form.Num_compte|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">{{form.rib|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">{{form.adresse|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+
+    <div class="col-md-4">{{form.swift|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">{{form.objet_paiment|as_crispy_field}}</div>
+  </div>
+
+  {% if exist == 'False' %}
+  <div class="row">
+    <div class="col-md-8">
+      <button
+        type="submit"
+        onclick="add()"
+        class="btn btn-success btn-block btn-lg"
+      >
+        <i class="fas fa-database"></i> Submit
+      </button>
+    </div>
+  </div>
+  {% else %}
+
+  
+
+
+ 
+    
+
+  
+
+  {% endif %}
+</form>
+
+{% endblock content %} {% block js %}
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+></script>
+<link
+  href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+  rel="stylesheet"
+/>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript">
+  var div_mode_reglement = document.getElementById("id_mode_paiment");
+  var div_id_row2 = document.getElementById("div_id_Num_compte");
+  div_id_row2.style.display = "none";
+
+  var div_id_row3 = document.getElementById("div_id_rib");
+  div_id_row3.style.display = "none";
+
+  var div_id_row4 = document.getElementById("div_id_adresse");
+  div_id_row4.style.display = "none";
+
+  var div_id_row1 = document.getElementById("div_id_swift");
+  div_id_row1.style.display = "none";
+
+  const mode_paiment = document.getElementById("id_mode_paiment");
+
+  mode_paiment.addEventListener("change", function handleChange(event) {
+    if (event.target.value === "003") {
+      div_id_row2.style.display = "block";
+      div_id_row3.style.display = "block";
+      div_id_row4.style.display = "block";
+      div_id_row1.style.display = "block";
+    } else {
+      div_id_row2.style.display = "none";
+      div_id_row3.style.display = "none";
+      div_id_row4.style.display = "none";
+      div_id_row1.style.display = "none";
+    }
+  });
+  window.addEventListener("load", (event) => {
+    // document.getElementById("id_beneficiaire").setAttribute("disabled", true);
+    if ("{{exist}}" == "True") {
+      document.getElementById("id_mode_paiment").setAttribute("disabled", true);
+      document.getElementById("id_Num_compte").setAttribute("disabled", true);
+      document.getElementById("id_rib").setAttribute("disabled", true);
+      document.getElementById("id_adresse").setAttribute("disabled", true);
+      document.getElementById("id_swift").setAttribute("disabled", true);
+      document.getElementById("id_Num_fournisseur").setAttribute("disabled", true);
+      document.getElementById("id_beneficiaire").setAttribute("disabled", true);
+      document
+        .getElementById("id_objet_paiment")
+        .setAttribute("disabled", true);
+
+      if (div_mode_reglement.value == "003") {
+        div_id_row2.style.display = "block";
+        div_id_row3.style.display = "block";
+        div_id_row4.style.display = "block";
+        div_id_row1.style.display = "block";
+      } else {
+        div_id_row2.style.display = "none";
+        div_id_row3.style.display = "none";
+        div_id_row4.style.display = "none";
+        div_id_row1.style.display = "none";
+      }
+    }
+  });
+
+ 
+
+
+</script>
+
+{% endblock %}
+ 

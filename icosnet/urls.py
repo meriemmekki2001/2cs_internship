@@ -8,6 +8,7 @@ urlpatterns = [
     path("icosnet/", include("core.urls")),
     path("icosnet/", include("comptes.urls")),
     path("admin/", admin.site.urls),
+    path("icosnet/", include("achat.urls")),
 ]
 
 if settings.DEBUG:

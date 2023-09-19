@@ -1,0 +1,68 @@
+{%  extends 'base.html' %}
+{% load static %}
+{% load tag %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<table class="table align-middle mb-0 bg-white">
+  <thead class="bg-light">
+    <tr>
+
+      <th>Champ</th>
+
+
+        <th>Data</th>
+
+        <th>Time</th>
+
+
+
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>
+        <div class="d-flex align-items-center">
+
+          <div class="ms-4">
+            <p class="fw-bold mb-1">{{champ}}</p>
+
+          </div>
+
+        </div>
+      </td>
+        <td>
+            <div class="d-flex align-items-center">
+
+              <div class="ms-4">
+                <p class="text-muted mb-0">{{changed}}</p>
+              </div>
+            </div>
+        </td>
+
+        <td>
+          <div class="d-flex align-items-center">
+
+            <div class="ms-4">
+              <p class="text-muted mb-0">{{time}}</p>
+            </div>
+          </div>
+
+        </td>
+
+
+
+    </tr>
+
+  </tbody>
+</table>
+
+
+
+
+
+
+
+{% endblock content %}

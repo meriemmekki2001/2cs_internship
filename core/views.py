@@ -1,37 +1,33 @@
 from django.shortcuts import render, redirect,get_object_or_404
-from .models import PreDemande,Categorie,Fournisseur
+from .models import PreDemande,Categorie,Fournisseur,Produit
 from django.http import HttpResponseRedirect,HttpResponse,HttpResponseNotAllowed
 from django.urls import reverse
 from comptes.models import User,Structure
 from .forms import ProduitFormSet,PreDemandeForm,CategorieForm, FournisseurForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.core import serializers
+import json
+from django.core import serializers
+from urllib.parse import urlencode
 
 #display les pre demandes d'achats
 def index(request):
     if request.user.is_authenticated:
        user = User.objects.get(pk=request.user.id)
        if user.departement.nom == 'Moyens Généraux':
-           predemandes = PreDemande.objects.filter(Q(statut=PreDemande.Statut.VALIDEE_DS) | Q(statut=PreDemande.Statut.CLOTUREE), destinationCompte='MGX')
+           predemandes = PreDemande.objects.filter(Q(statut=PreDemande.Statut.VALIDEE_DS) | Q(statut=PreDemande.Statut.CLOTUREE), destinationCompte='MGX').order_by('-creee_le')
        elif user.departement.nom == 'Interconnexions':
-            predemandes = PreDemande.objects.filter(Q(statut=PreDemande.Statut.VALIDEE_DS) | Q(statut=PreDemande.Statut.CLOTUREE),destinationCompte='INT')
+            predemandes = PreDemande.objects.filter(Q(statut=PreDemande.Statut.VALIDEE_DS) | Q(statut=PreDemande.Statut.CLOTUREE),destinationCompte='INT').order_by('-creee_le')
        elif user.responsable:
-            predemandes = PreDemande.objects.filter(departement=user.departement)
+            predemandes = PreDemande.objects.filter(departement=user.departement).order_by('-creee_le')
        else:
-            predemandes = PreDemande.objects.filter(cree_par=user)
+            predemandes = PreDemande.objects.filter(cree_par=user).order_by('-creee_le')
 
        return render(request, 'core/home.html', {'predemandes': predemandes, 'user': user})
     else:
        return render(request, 'comptes/access_denied.html')
        
-
-
-# supprimer pre demande d'achat
-# def delete(request, id):
-#   if request.method == 'POST':
-#     pre_demande = PreDemande.objects.get(pk=id)
-#     pre_demande.delete()
-#   return HttpResponseRedirect(reverse('core:index'))
 
 # ajouter pre demande d'achat
 def create_pre_demande(request):
@@ -85,7 +81,22 @@ def validation_sa(request, id):
       pre_demande.statut = PreDemande.Statut.CLOTUREE
       pre_demande.reponse_finale = PreDemande.Reponse.VALIDEE_SA
       pre_demande.save()
-      return HttpResponseRedirect(reverse('core:index'))
+      ctx = {}
+      ctx['destination_achat'] = pre_demande.destinationCompte
+      ctx['nature_achat'] = pre_demande.natureAchat
+      ctx['mise_dispo'] = pre_demande.miseDiso
+      ctx['affectation_achat'] = pre_demande.affectationAchat
+      produits = Produit.objects.filter(pre_demande=pre_demande)
+      designations = []
+      qtts = []
+      for produit in produits:
+         designations.append(produit.designation)
+         qtts.append(str(produit.qtt))
+      ctx['designations'] = designations
+      ctx['qtts'] = qtts
+      url = reverse('demandeachat_create') + '?' + '&'.join([f'{key}={value}' for key, value in ctx.items()])
+
+      return redirect(url)
 
 # rejet d'une pre demande d'acaht par un serivce d'achat   
 def rejet_sa(request, id):

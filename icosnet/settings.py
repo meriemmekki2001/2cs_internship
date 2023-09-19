@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -42,6 +44,9 @@ INSTALLED_APPS = [
     'comptes',
     'core',
     'django_filters',
+    'achat',
+    'crispy_forms',
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [

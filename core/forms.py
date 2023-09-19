@@ -24,7 +24,11 @@ class PreDemandeForm(forms.ModelForm):
             "md_autre": _(""),
         }
 
+
 class ProduitForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial["designation"]="test"
     class Meta:
         model = Produit
         fields = ["designation","qtt"]

@@ -1,0 +1,255 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% load static %}
+
+{% block content %}
+<form action="" method="POST" autocomplete="off">
+  {% csrf_token %}
+  <p class="h1">Demande de Paiment</p>
+
+  <div class="row">
+    <div class="col-md-4">
+      {{form.Num_fournisseur|as_crispy_field}}
+      {{form.beneficiaire|as_crispy_field}}
+      {{form.bon_commande|as_crispy_field}}
+      {{form.num_facture|as_crispy_field}}
+      
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">{{form.montant_chiffre|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">{{form.montant_lettres|as_crispy_field}}</div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">{{form.devise|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">{{form.mode_paiment|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">{{form.Num_compte|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">{{form.rib|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">{{form.adresse|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+
+    <div class="col-md-4">{{form.swift|as_crispy_field}}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">{{form.objet_paiment|as_crispy_field}}</div>
+  </div>
+
+  {% if exist == 'False' %}
+  <div class="row">
+    <div class="col-md-8">
+      <button
+        type="submit"
+        onclick="add()"
+        class="btn btn-success btn-block btn-lg"
+      >
+        <i class="fas fa-database"></i> Submit
+      </button>
+    </div>
+  </div>
+  {% else %}
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="mb-2">
+        <div class="input-group mb-2">
+          <span class="input-group-text">Currently</span>
+          <div class="form-control d-flex h-auto">
+            <span class="text-break" style="flex-grow: 1; min-width: 0">
+              <a href="/media/{{DP.document_DP}}">{{DP.document_DP}}</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+</form>
+
+{% endblock content %} {% block js %}
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+></script>
+<link
+  href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+  rel="stylesheet"
+/>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript">
+   $(document).ready(function (){
+  $('#id_bon_commande').select2();
+  //$('#id_num_facture').select2();
+
+});
+  var div_mode_reglement = document.getElementById("id_mode_paiment");
+  var div_id_row2 = document.getElementById("div_id_Num_compte");
+  div_id_row2.style.display = "none";
+
+  var div_id_row3 = document.getElementById("div_id_rib");
+  div_id_row3.style.display = "none";
+
+  var div_id_row4 = document.getElementById("div_id_adresse");
+  div_id_row4.style.display = "none";
+
+  var div_id_row1 = document.getElementById("div_id_swift");
+  div_id_row1.style.display = "none";
+
+  const mode_paiment = document.getElementById("id_mode_paiment");
+
+  mode_paiment.addEventListener("change", function handleChange(event) {
+    if (event.target.value === "003") {
+      div_id_row2.style.display = "block";
+      div_id_row3.style.display = "block";
+      div_id_row4.style.display = "block";
+      div_id_row1.style.display = "block";
+    } else {
+      div_id_row2.style.display = "none";
+      div_id_row3.style.display = "none";
+      div_id_row4.style.display = "none";
+      div_id_row1.style.display = "none";
+    }
+  });
+  window.addEventListener("load", (event) => {
+    // document.getElementById("id_beneficiaire").setAttribute("disabled", true);
+    if ("{{exist}}" == "True") {
+      document.getElementById("id_mode_paiment").setAttribute("disabled", true);
+      document.getElementById("id_Num_compte").setAttribute("disabled", true);
+      document.getElementById("id_rib").setAttribute("disabled", true);
+      document.getElementById("id_adresse").setAttribute("disabled", true);
+      document.getElementById("id_swift").setAttribute("disabled", true);
+      document.getElementById("id_Num_fournisseur").setAttribute("disabled", true);
+      document.getElementById("id_beneficiaire").setAttribute("disabled", true);
+      document
+        .getElementById("id_objet_paiment")
+        .setAttribute("disabled", true);
+
+      if (div_mode_reglement.value == "003") {
+        div_id_row2.style.display = "block";
+        div_id_row3.style.display = "block";
+        div_id_row4.style.display = "block";
+        div_id_row1.style.display = "block";
+      } else {
+        div_id_row2.style.display = "none";
+        div_id_row3.style.display = "none";
+        div_id_row4.style.display = "none";
+        div_id_row1.style.display = "none";
+      }
+    }
+  });
+
+  const Num_fournisseur = document.getElementById("id_Num_fournisseur");
+  const beneficiaire = document.getElementById("id_beneficiaire");
+  const Num_facture = document.getElementById("id_num_facture");
+  
+ 
+  $("#id_Num_fournisseur").select2({
+    ajax: {
+      url: "https://ibm.vazii.com/esb/portail_paiement_get_all_vendors_like_A.php",
+      delay: 250,
+      type: "POST",
+      data: function (term) {
+        return { fournisseurnom: term.term };
+      },
+      processResults: function (data, page) {
+        return {
+          results: $.map(data.messageRetour, displayItemF),
+        };
+      },
+    },
+    escapeMarkup: function (markup) {
+      return markup;
+    },
+    placeholder: "Search for fournisseurs",
+    minimumInputLength: 3,
+    templateSelection: formatRepoSelection
+  });
+  function displayItemF(repo) {
+    return {
+      id: repo.num_vendor,
+      text: '<div class="select2CompanyName">' + repo.nom + "</div>" 
+      + '<div class="select2Companyid">' + repo.num_vendor + "</div>",
+      description :repo.nom
+      
+       
+    };
+  }
+  function formatRepoSelection (repo) {
+
+
+    beneficiaire.value = repo.description
+  
+    
+
+   return repo.id ;
+}
+
+
+  
+
+  $("#id_Num_fournisseur").change(function() {
+    const BC =[];
+    $("#id_bon_commande").select2({
+    ajax :{
+ url:"https://ibm.vazii.com/esb/portail_paiement_get_all_CMD_INVOICE_Achat_FromVendor.php",
+ type: "POST",
+ delay: 250,
+ data: {fournisseurcode: Num_fournisseur.value},
+ 
+  processResults: function (data, page) {
+       
+        return {
+          results: $.map(data.messageRetour, displayItemF__),
+        };
+      },
+    },
+    escapeMarkup: function (markup) {
+      return markup;
+    },
+    placeholder: "Search for fournisseurs",
+    minimumInputLength: 0,
+    templateSelection: formatRepoSelection__
+
+     });
+ 
+ });
+
+ function displayItemF__(repo) {
+    return {
+      id: repo.num_commande,
+      text: '<div class="select2CompanyName">' + repo.num_commande + "</div>" 
+      + '<div class="select2Companyid">' + repo.num_facture + "</div>",
+      description :repo.num_facture
+      
+       
+    };
+  }
+  function formatRepoSelection__ (repo) {
+
+
+    Num_facture.value = repo.description
+  
+    
+
+   return repo.id ;
+}
+
+</script>
+
+{% endblock %}
+ 

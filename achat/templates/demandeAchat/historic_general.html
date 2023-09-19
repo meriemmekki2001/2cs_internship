@@ -1,0 +1,108 @@
+
+
+
+
+
+{%  extends 'base.html' %}
+{% load static %}
+{% load tag %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<table class="table align-middle mb-0 bg-white">
+  <thead class="bg-light">
+    <tr>
+
+        <th>Table</th>
+        <th>ID</th>
+
+         <th>Action</th>
+        <th>Time</th>
+        <th>Detail</th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+      {% for demande in object_list %}
+    <tr>
+      <td>
+        <div class="d-flex align-items-center">
+
+          <div class="ms-4">
+            <p class="fw-bold mb-1">{{demande.table}}</p>
+
+          </div>
+
+        </div>
+      </td>
+        <td>
+            <div class="d-flex align-items-center">
+
+              <div class="ms-4">
+                <p class="text-muted mb-0">{{demande.id_enregistrement}}</p>
+              </div>
+            </div>
+        </td>
+
+        <td>
+          <div class="d-flex align-items-center">
+
+            <div class="ms-4">
+              <p class="text-muted mb-0">{{demande.action}}</p>
+            </div>
+          </div>
+
+        </td>
+        <td>
+          <div class="d-flex align-items-center">
+
+            <div class="ms-4">
+              <p class="text-muted mb-0">{{demande.created_on}}</p>
+            </div>
+          </div>
+
+        </td>
+
+
+           <td>
+          <div class="d-flex align-items-center">
+
+            <div class="ms-4">
+             <a href="{% url 'DemandeAchat_historic_detail' demande.id %}">Detail</a></p>
+            </div>
+          </div>
+        </td>
+
+    </tr>
+    {%  endfor  %}
+  </tbody>
+</table>
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+     {% if page_obj.has_previous %}
+      <li class="page-item">
+          <a class="page-link" href="?{% param_replace page=page_obj.previous_page_number%}" aria-label="Précédente">
+          <span aria-hidden="true">&laquo;</span>
+          </a>
+      </li>
+     {% endif %}
+       <span class="current">
+           Page {{page_obj.number}} sur {{ page_obj.paginator.num_pages }}
+       </span>
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?{% param_replace page=page_obj.next_page_number%}" aria-label="Suivante">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+
+
+
+
+
+
+{% endblock content %}

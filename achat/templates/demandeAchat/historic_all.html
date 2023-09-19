@@ -1,0 +1,152 @@
+{%  extends 'base.html' %}
+{% load static %}
+{% load tag %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+
+<div class="row">
+  <div class="col">
+    <div class="card card-body">
+       <form method="get">
+        <div class="row">
+
+          <div class="col-md-4">
+            {{filter.form.devise|as_crispy_field}}
+
+        </div>
+        <div class="col-md-4">
+          {{filter.form.statut_achat|as_crispy_field}}
+
+      </div>
+      <div class="col-md-4">
+        {{filter.form.destination_achat|as_crispy_field}}
+
+    </div>
+      </div>
+        <button class="btn btn-primary" type="submit">Search </button>
+
+       </form>
+
+  </div>
+</div>
+</div>
+<table class="table align-middle mb-0 bg-white">
+  <thead class="bg-light">
+    <tr>
+
+      <th>Destination</th>
+
+        <th>Devise</th>
+        <th>Devis Total</th>
+
+        <th>Statut</th>
+        <th>etat</th>
+         <th>Action</th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+      {% for demande in object_list %}
+    <tr>
+      <td>
+        <div class="d-flex align-items-center">
+
+          <div class="ms-4">
+            <p class="fw-bold mb-1"><a href="{% url 'DemandeAchat_show_detail' demande.id %}">{{demande.DA_Code}}</a></p>
+
+          </div>
+
+        </div>
+      </td>
+        <td>
+            <div class="d-flex align-items-center">
+
+              <div class="ms-4">
+                <p class="text-muted mb-0">{{demande.destination_achat}}</p>
+              </div>
+            </div>
+        </td>
+
+        <td>
+          <div class="d-flex align-items-center">
+
+            <div class="ms-4">
+              <p class="text-muted mb-0">{{demande.devise}}</p>
+            </div>
+          </div>
+
+        </td>
+        <td>
+          <div class="d-flex align-items-center">
+
+            <div class="ms-4">
+              <p class="text-muted mb-0">{{demande.total_devis}}</p>
+            </div>
+          </div>
+
+        </td>
+        <td>
+          <div class="d-flex align-items-center">
+           {% if demande.statut_achat == "001" %}
+            <div class="ms-4">
+              <p class="text-muted mb-0">En Cours</p>
+            </div>
+            {% elif demande.statut_achat == "003" %}
+            <div class="ms-4">
+              <p class="text-muted mb-0">Cloturé</p>
+            </div>
+            {% endif %}
+          </div>
+        </td>
+        <td>
+          <div class="d-flex align-items-center">
+
+            <div class="ms-4">
+              <p class="text-muted mb-0">{{demande.etat_achat}}</p>
+            </div>
+          </div>
+        </td>
+           <td>
+          <div class="d-flex align-items-center">
+
+            <div class="ms-4">
+             <a href="{% url 'DemandeAchat_historic_general' demande.id %}">Historique</a></p>
+            </div>
+          </div>
+        </td>
+
+    </tr>
+    {%  endfor  %}
+  </tbody>
+</table>
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+     {% if page_obj.has_previous %}
+      <li class="page-item">
+          <a class="page-link" href="?{% param_replace page=page_obj.previous_page_number%}" aria-label="Précédente">
+          <span aria-hidden="true">&laquo;</span>
+          </a>
+      </li>
+     {% endif %}
+       <span class="current">
+           Page {{page_obj.number}} sur {{ page_obj.paginator.num_pages }}
+       </span>
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?{% param_replace page=page_obj.next_page_number%}" aria-label="Suivante">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+
+
+
+
+
+
+{% endblock content %}

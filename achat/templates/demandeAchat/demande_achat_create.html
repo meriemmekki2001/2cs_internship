@@ -1,0 +1,462 @@
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jautocalc@1.3.1/dist/jautocalc.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script type="text/javascript">
+		
+		$(function() {
+
+			function autoCalcSetup() {
+				$('form#DemandeAchat_Form').jAutoCalc('destroy');
+				$('form#DemandeAchat_Form tr.line_items').jAutoCalc({keyEventsFire: true, decimalPlaces: 3, emptyAsZero: true});
+				$('form#DemandeAchat_Form').jAutoCalc({decimalPlaces: 3});
+			}
+			autoCalcSetup();
+             
+
+            
+  
+			$('button.row-remove').on("click", function(e) {
+				e.preventDefault();
+
+				var form = $(this).parents('form')
+				$(this).parents('tr').remove();
+				autoCalcSetup();
+
+			});
+
+			$('button.row-add').on("click", function(e) {
+				e.preventDefault();
+
+				var $table = $(this).parents('table');
+				var $top = $table.find('tr.line_items').first();
+				var $new = $top.clone(true);
+
+				$new.jAutoCalc('destroy');
+				$new.insertBefore($top);
+				$new.find('input[type=text]').val('');
+				autoCalcSetup();
+
+			});
+
+		});
+		//-->
+	</script>
+
+<form id="DemandeAchat_Form" comptecomptable-detail-url="{% url 'ajax_load_detail' %}" comptecomptable-detail-url-projet="{% url 'ajax_load_detail_projet' %}" action="" method="post" autocomplete="off">
+    {% csrf_token %}
+       <div class="row">
+        <div class="col-md-4">
+
+    {{form.destination_achat|as_crispy_field}}
+
+
+     
+</div>
+</div>
+
+
+   <div class="form-check">
+  <input class="form-check-input" type="checkbox" onchange="showHide(this.checked)" name="projet" id="projet">
+  <label class="form-check-label" for="projet">
+    Projet
+    </label>
+
+   </div>
+   <div class="row">
+    <div   class="col-md-4">
+
+<div id="projet_div" style="display:none;" class="mb-3">
+    <label class="form-label">
+           Projets
+        </label>
+      <select name="projet_id" id="id_projet" class="select form-select">
+          <option value="" selected>---- Selectionner un Projet------</option>
+          {% for pro in projet__ %}
+          <option value={{pro.id}}>{{ pro.nom_projet}}</option>
+              {% endfor %}
+          </select>
+
+
+  </div>
+
+</div>
+
+</div>
+
+   <div class="row">
+        <div class="col-md-4">
+
+
+
+
+    <div id="div_id_nature_achat" class="mb-3">
+
+
+            <label for="id_nature_achat" class="form-label">
+                Nature de autre l Achat
+            </label>
+        <select name="nature_achat" class="select form-select" onchange="showAutre1('autre_nature_achat_div', this)" id="id_nature_achat">
+  <option value="" selected>---------</option>
+
+  <option value="001">Investissement</option>
+
+  <option value="002">Service</option>
+
+  <option value="003">Consommable</option>
+
+
+
+</select>
+
+    </div>
+        </div>
+        <div id="autre_nature_achat_div" style="display:none;"  class="col-md-8">
+
+           {{form.autre_nature_achat|as_crispy_field}}
+        </div>
+
+
+   </div>
+     <div class="col-md-4">
+
+             {{form.disponibilité |as_crispy_field}}
+        </div>
+
+     <div class="row">
+        <div class="col-md-4">
+             <div id="div_id_mise_dispo" class="mb-3">
+
+
+            <label for="id_mise_dispo" class="form-label">
+                Destination de l Achat/Mise a disposition
+            </label>
+                 <select id="mise_dispo_id" name="mise_dispo" class="select form-select"  onchange="showAutre2('autre_mise_dispo_div', this)" id="id_mise_dispo">
+  <option value="" selected>---------</option>
+
+  <option value="001">Cosommable interne</option>
+
+  <option value="002">Revente client</option>
+
+  <option value="003">Stock</option>
+
+  <option value="004">Autre</option>
+
+</select>
+
+    </div>
+
+        </div>
+        <div id="autre_mise_dispo_div" style="display:none;"  class="col-md-8">
+
+           {{form.autre_mise_dispo|as_crispy_field}}
+        </div>
+
+    </div>
+     <div class="row">
+        <div   class="col-md-4">
+
+
+
+
+    <div id="div_id_affectation_achat" class="mb-3">
+            <label for="id_affectation_achat" class="form-label">
+                Mise a dispo-Famille de produits
+            </label>
+        <select name="affectation_achat" class="select form-select" onchange="showAutre3('autre_affectation_achat_div', this)" id="id_affectation_achat">
+  <option value="" selected>---------</option>
+
+  <option value="001">Famille accés internet</option>
+
+  <option value="002">Famille Communication unifié</option>
+
+  <option value="003">Famille CLOUD</option>
+
+
+
+  <option value="005">Autre</option>
+
+</select>
+    </div>
+        </div>
+        <div id="autre_affectation_achat_div" style="display:none;" class="col-md-8">
+
+           {{form.autre_affectation_achat|as_crispy_field}}
+        </div>
+
+    </div>
+     <div class="col-md-4">
+
+           {{form.devise|as_crispy_field}}
+           {{form.fournisseurs|as_crispy_field}}
+           {{form.designations|as_crispy_field}}
+           {{form.prices|as_crispy_field}}
+           {{form.qtys|as_crispy_field}}
+        </div>
+
+        <div class="row">
+        <div   class="col-md-8">
+            {{form.code_comptable_detail|as_crispy_field}}
+        </div>
+    
+        <div  class="col-md-4">
+            {{form.code_comptable|as_crispy_field}}
+            
+        </div>
+
+    </div>
+
+    <table name="cart">
+		<tr>
+			<th>&nbsp;</th>
+			<th>Fournisseur</th>
+            <th>Désignation</th>
+			<th>Quantité</th>
+			<th>prix unitaire h/t</th>
+			<th>&nbsp;</th>
+			<th>Total</th>
+		</tr>
+		<tr class="line_items">
+			<td><button class="row-remove">Supp</button></td>
+            <td> <input type="text" name="fournisseur" ></td>
+			<td><input type="text" name="designation" ></td>
+			<td><input  type="text" id='id_qty' name="qty" value="0"></td>
+			<td><input type="text" id='id_price' name="price" value="0"></td>
+			<td>&nbsp;</td>
+			<td><input type="text" name="item_total" value="" jAutoCalc="{qty} * {price}"></td>
+		</tr>
+		
+		<tr>
+			<td colspan="3">&nbsp;</td>
+			<td>Total</td>
+			<td>&nbsp;</td>
+			<td><input type="text" name="grand_total" value="" jAutoCalc="SUM({item_total})"></td>
+		</tr>
+		<tr>
+			<td colspan="99"><button class="row-add">Ajouter une ligne</button></td>
+		</tr>
+	</table>
+
+
+            
+
+
+
+
+
+
+    <br> </br>
+
+
+
+    <div class="col-md-8">
+        <div class="col-md-8">
+            <button type="submit" onclick="add()" class="btn btn-success btn-block btn-lg"><i class="fas fa-database"></i>
+                Submit</button>
+        </div>
+
+    </div>
+
+</form>
+{% endblock content %}
+
+{% block js %}
+
+<script>
+     function hasWhiteSpace(s) {
+     return s.search(/\s/);
+     }
+     function containsOnlyNumbers(str) {
+     return /^(\d+-)*(\d+)$/.test(str);
+     }
+    $("#id_price").change(function() {
+        const price=$('#id_price').val();
+
+        if(hasWhiteSpace(price) > parseInt('0')){
+        alert("Le montant ne doit pas contenir d'espaces ou de virgule que un point pour les chiffres apres la virgule ");
+        }else if(!/[^a-zA-Z]/.test(price)){
+        alert("Le montant ne doit pas contenir de lettres");
+        }
+        });
+        $("#id_qty").change(function() {
+
+        const qty=$('#id_qty').val();
+        console.log(qty);
+
+        if(!containsOnlyNumbers(qty)){
+        alert("La Quantitè ne doit pas contenir d'espaces ou de virgule ou de points");
+        }
+        });
+    </script>
+<script>
+
+    $("#id_devise").change(function() {
+
+        //const id_code_comptable=$('#id_code_comptable').val();
+        const id_devise=$('#id_devise').val();
+        const id_destination_achat=$('#id_destination_achat').val();
+        const projet=$('#id_projet').val();
+
+        if (typeof projet === 'string' && projet.length === 0) {
+
+         const url=$("#DemandeAchat_Form").attr("comptecomptable-detail-url");
+        $.ajax({
+         url:url,
+         data: {
+           //'id_code_comptable':id_code_comptable,
+           'id_devise':id_devise,
+           'id_destination_achat':id_destination_achat
+
+           },
+           success : function(data) {
+
+            $("#id_code_comptable_detail").html(data);
+            }
+            });
+       } else {
+        const url1=$("#DemandeAchat_Form").attr("comptecomptable-detail-url-projet");
+        $.ajax({
+         url:url1,
+         data: {
+           //'id_code_comptable':id_code_comptable,
+           'id_devise':id_devise,
+           'id_destination_achat':id_destination_achat,
+           'projet':projet
+
+           },
+           success : function(data) {
+
+            $("#id_code_comptable_detail").html(data);
+            }
+            });
+
+
+
+
+
+        }
+
+     
+     
+        });
+$("#id_code_comptable_detail").change(function() {
+
+const id_code_comptable_detail=$('#id_code_comptable_detail').val();
+
+$.ajax({
+ url:"{% url 'ajax_load_compte_comptable' %}",
+ data: {
+   //'id_code_comptable':id_code_comptable,
+   'id_code_comptable_detail':id_code_comptable_detail,
+
+   },
+   success : function(data) {
+
+    $("#id_code_comptable").html(data);
+    }
+    });
+});
+
+
+    </script>
+    <script>
+    $(document).ready(function (){
+        $('#mise_dispo_id').val("{{mise_dispo}}")
+        $('#id_nature_achat').val("{{nature_achat}}")
+        $('#id_affectation_achat').val("{{affectation_achat}}")
+        $('#id_desi').val("{{desi.0}}")
+        $('#id_qtts').val("{{qtt.0}}")
+        $('#id_code_comptable').select2();
+
+});
+
+function showHide(checked){
+if(checked == true){
+$("#projet_div").fadeIn();
+
+}else{
+$("#projet_div").fadeOut();
+}
+
+}
+function showAutre1(id, elementValue) {
+      document.getElementById(id).style.display = elementValue.value == 004 ? 'block' : 'none';
+   }
+   function showAutre2(id, elementValue) {
+      document.getElementById(id).style.display = elementValue.value == 004 ? 'block' : 'none';
+   }
+   function showAutre3(id, elementValue) {
+      document.getElementById(id).style.display = elementValue.value == 005 ? 'block' : 'none';
+   }
+   
+    
+
+
+ 
+   
+    
+    
+     
+      </script>
+
+      <script>
+
+       
+        function add(){
+ 
+            const prices =[];
+            const qtys =[];
+            const fournisseurs =[];
+            const designations =[];
+        
+          $('table tr ').each(function () {
+              x = this;
+              $(this).children('td').each(function () {
+                    
+                    var qte = $(this).children('input[name="qty"]')[0]
+                    var price = $(this).children('input[name="price"]')[0]
+                    var fournisseur = $(this).children('input[name="fournisseur"]')[0]
+                    var designation = $(this).children('input[name="designation"]')[0]
+                    if (price) {
+                        prices.push(price.value);
+                        
+                    } 
+                    if(qte){
+                        qtys.push(qte.value) ;
+                    }
+                    if(designation){
+                        designations.push(designation.value)
+                    }
+                    if(fournisseur){
+                        fournisseurs.push(fournisseur.value)
+                    }
+                 
+                  
+              });
+              
+             
+              
+             
+          });
+          console.log("prices",prices);
+          console.log("qtys",qtys);
+       
+          $('#id_fournisseurs').val(JSON.stringify(fournisseurs))
+          $('#id_designations').val(JSON.stringify(designations))
+          $('#id_prices').val(JSON.stringify(prices))
+          $('#id_qtys').val(JSON.stringify(qtys))
+          
+        
+        }
+ 
+    
+    </script>
+
+  
+  {% endblock %}
