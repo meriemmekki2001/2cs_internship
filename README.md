@@ -1,0 +1,1 @@
+This is my work during my internship in my 2nd year of the second cycle at ESI SBA, I have used Django, django templates (html, bootstrap + JS) and I've implemented authentication, CRUD operations, admin site customization, password resset ..
